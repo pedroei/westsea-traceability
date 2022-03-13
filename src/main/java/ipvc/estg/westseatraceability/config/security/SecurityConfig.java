@@ -1,4 +1,4 @@
-package ipvc.estg.westseatraceability.security;
+package ipvc.estg.westseatraceability.config.security;
 
 import ipvc.estg.westseatraceability.filter.CustomAuthenticationFilter;
 import ipvc.estg.westseatraceability.filter.CustomAuthorizationFilter;
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -38,11 +40,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        //TODO: define roles
-        http.authorizeRequests().antMatchers("/api/login/**", "/api/v1/user/token/refresh/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/user/client/**").hasAnyAuthority("ROLE_CLIENT");
-        http.authorizeRequests().antMatchers("/api/v1/user/employee/**").hasAnyAuthority("ROLE_EMPLOYEE");
-        http.authorizeRequests().antMatchers("/api/v1/user/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/v1/user/token/refresh/**", "/v2/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll();
+//        http.authorizeRequests().antMatchers("/api/v1/user/client/**").hasAnyAuthority("ROLE_CLIENT");
+//        http.authorizeRequests().antMatchers("/api/v1/user/employee/**").hasAnyAuthority("ROLE_EMPLOYEE");
+//        http.authorizeRequests().antMatchers("/api/v1/user/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenHelper), UsernamePasswordAuthenticationFilter.class);

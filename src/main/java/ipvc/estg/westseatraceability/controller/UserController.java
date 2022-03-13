@@ -7,17 +7,18 @@ import ipvc.estg.westseatraceability.service.TokenService;
 import ipvc.estg.westseatraceability.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -41,15 +42,17 @@ public class UserController {
     }
 
     @GetMapping("/token/refresh")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
         tokenService.refreshToken(request, response);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
     @GetMapping("/client")
     public String testClient() {
         return "endpoint works fine for: client";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_ADMIN')")
     @GetMapping("/employee")
     public String testEmployee() {
         return "endpoint works fine for: employee";
