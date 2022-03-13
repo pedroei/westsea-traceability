@@ -1,11 +1,10 @@
 package ipvc.estg.westseatraceability.repository;
 
 import ipvc.estg.westseatraceability.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.UUID;
+import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUuid(UUID uuid);
-    User findByUsername(String username);
+public interface UserRepository extends MongoRepository<User, String> {
+    Optional<User> findByUsername(String username);
 }

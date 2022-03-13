@@ -3,30 +3,28 @@ package ipvc.estg.westseatraceability.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-@Entity
+@Document
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private UUID uuid;
+    private String id;
 
     private String name;
 
+    @Indexed(unique = true)
     private String username;
 
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles = new ArrayList<>();
+    private List<RoleEnum> roles = new ArrayList<>();
 }
