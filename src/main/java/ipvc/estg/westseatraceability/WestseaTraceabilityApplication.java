@@ -2,6 +2,7 @@ package ipvc.estg.westseatraceability;
 
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
 import ipvc.estg.westseatraceability.model.RoleEnum;
+import ipvc.estg.westseatraceability.repository.UserRepository;
 import ipvc.estg.westseatraceability.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,9 +19,13 @@ public class WestseaTraceabilityApplication {
     }
 
     @Bean
-    CommandLineRunner run(UserService userService) {
+    CommandLineRunner run(UserService service, UserRepository repository) {
         return args -> {
-            userService.saveUser(new CreateUserDto("Administrator", "admin", "1234", List.of(RoleEnum.ROLE_ADMIN)));
+            var adminUser = new CreateUserDto("Administrator", "admin", "1234", List.of(RoleEnum.ROLE_ADMIN));
+            boolean empty = repository.findByUsername(adminUser.getUsername()).isEmpty();
+            if (empty) {
+                service.saveUser(adminUser);
+            }
         };
     }
 }
