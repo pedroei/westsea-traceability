@@ -20,27 +20,31 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserControllerContract {
     private final UserService userService;
     private final TokenService tokenService;
 
-    @GetMapping()
-    public ResponseEntity<List<UserDto>> getUsers() {
+    @Override
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @PostMapping()
-    public ResponseEntity<UserDto> saveUser(@RequestBody CreateUserDto dto) {
+    @Override
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto dto) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(dto));
     }
 
+    @Override
     @PostMapping("/role")
     public ResponseEntity<Void> addRoleToUser(@RequestBody RoleToUserDto dto) {
         userService.addRoleToUser(dto.getUserId(), dto.getRole());
         return ResponseEntity.ok().build();
     }
 
+    @Override
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
         tokenService.refreshToken(request, response);

@@ -1,4 +1,4 @@
-package ipvc.estg.westseatraceability.model;
+package ipvc.estg.westseatraceability.enumeration;
 
 public enum RoleEnum {
     ROLE_EMPLOYEE,

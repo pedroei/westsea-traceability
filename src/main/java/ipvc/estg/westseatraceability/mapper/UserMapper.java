@@ -22,12 +22,11 @@ public class UserMapper {
     }
 
     public UserDto userToDto(User user) {
-        UserDto dto = new UserDto();
-        dto.setName(user.getName());
-        dto.setUsername(user.getUsername());
-        dto.setRoles(user.getRoles());
-
-        return dto;
+        return UserDto.builder()
+                .name(user.getName())
+                .username(user.getUsername())
+                .roles(user.getRoles())
+                .build();
     }
 
     public List<UserDto> userListToDto(List<User> users) {

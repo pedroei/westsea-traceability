@@ -1,5 +1,6 @@
 package ipvc.estg.westseatraceability.model;
 
+import ipvc.estg.westseatraceability.enumeration.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

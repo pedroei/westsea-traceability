@@ -1,7 +1,7 @@
 package ipvc.estg.westseatraceability;
 
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
-import ipvc.estg.westseatraceability.model.RoleEnum;
+import ipvc.estg.westseatraceability.enumeration.RoleEnum;
 import ipvc.estg.westseatraceability.repository.UserRepository;
 import ipvc.estg.westseatraceability.service.UserService;
 import org.springframework.boot.CommandLineRunner;

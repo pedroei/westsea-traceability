@@ -3,7 +3,7 @@ package ipvc.estg.westseatraceability.service;
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
 import ipvc.estg.westseatraceability.mapper.UserMapper;
-import ipvc.estg.westseatraceability.model.RoleEnum;
+import ipvc.estg.westseatraceability.enumeration.RoleEnum;
 import ipvc.estg.westseatraceability.model.User;
 import ipvc.estg.westseatraceability.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
