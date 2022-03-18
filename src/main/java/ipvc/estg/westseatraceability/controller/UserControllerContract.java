@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
 import ipvc.estg.westseatraceability.dto.RoleToUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@SecurityRequirement(name = "westseatraceapi")
 public interface UserControllerContract {
 
     @Operation(summary = "Get all users")
