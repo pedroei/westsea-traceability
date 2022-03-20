@@ -11,8 +11,6 @@ import ipvc.estg.westseatraceability.dto.RoleToUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @SecurityRequirement(name = "westseatraceapi")
@@ -39,21 +37,11 @@ public interface UserControllerContract {
 
     @Operation(summary = "Add a new role to a user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "The role was successfully added to the user", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserDto.class))}),
+            @ApiResponse(responseCode = "201", description = "The role was successfully added to the user"),
             @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
     ResponseEntity<Void> addRoleToUser(RoleToUserDto dto);
 
-    @Operation(summary = "Refresh the current token that is expired")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Token refreshed successfully", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserDto.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
-            @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
-    void refreshToken(HttpServletRequest request, HttpServletResponse response);
 }
