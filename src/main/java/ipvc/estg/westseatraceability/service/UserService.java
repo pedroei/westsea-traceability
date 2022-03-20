@@ -2,9 +2,10 @@ package ipvc.estg.westseatraceability.service;
 
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
+import ipvc.estg.westseatraceability.enumeration.RoleEnum;
+import ipvc.estg.westseatraceability.exception.BadRequestException;
 import ipvc.estg.westseatraceability.exception.NotFoundException;
 import ipvc.estg.westseatraceability.mapper.UserMapper;
-import ipvc.estg.westseatraceability.enumeration.RoleEnum;
 import ipvc.estg.westseatraceability.model.User;
 import ipvc.estg.westseatraceability.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,11 @@ public class UserService implements UserDetailsService {
     public UserDto saveUser(CreateUserDto dto) {
         log.info("Saving new user {} to the DB", dto.getName());
 
+        userRepository.findByUsername(dto.getUsername())
+                .ifPresent(user -> {
+                    throw new BadRequestException("User with username: " + user.getUsername() + " already exists");
+                });
+
         User user = userMapper.createDtoToUser(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -57,13 +63,12 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         log.info("Adding role {} to the User {}", role, user.getName());
 
+        if (user.getRoles().contains(role)) {
+            throw new BadRequestException("User " + user.getUsername() + " already as the role of: " + role);
+        }
+
         user.getRoles().add(role);
         userRepository.save(user);
-    }
-
-    public User getUserById(String id) {
-        log.info("Fetching user with the uuid: {}", id);
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public User getUserByUsername(String username) {

@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -24,5 +24,5 @@ public class CreateUserDto {
     private String password;
 
     @Builder.Default
-    private List<RoleEnum> roles = new ArrayList<>();
+    private Set<RoleEnum> roles = new HashSet<>();
 }

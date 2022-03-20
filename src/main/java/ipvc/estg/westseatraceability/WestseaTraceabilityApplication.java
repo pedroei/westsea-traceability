@@ -9,7 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.List;
+import java.util.Set;
 
 @SpringBootApplication
 public class WestseaTraceabilityApplication {
@@ -21,7 +21,7 @@ public class WestseaTraceabilityApplication {
     @Bean
     CommandLineRunner run(UserService service, UserRepository repository) {
         return args -> {
-            var adminUser = new CreateUserDto("Administrator", "admin", "1234", List.of(RoleEnum.ROLE_ADMIN));
+            var adminUser = new CreateUserDto("Administrator", "admin", "1234", Set.of(RoleEnum.ROLE_ADMIN));
             boolean empty = repository.findByUsername(adminUser.getUsername()).isEmpty();
             if (empty) {
                 service.saveUser(adminUser);
