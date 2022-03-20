@@ -42,7 +42,8 @@ public class ProductDesignationService {
     public ProductDesignationDto createProductDesignation(CreateProductDesignationDto dto) {
         log.info("Creating new product designation: {} ", dto.getDesignation());
 
-        productDesignationRepository.findByDesignation(dto.getDesignation())
+        productDesignationRepository
+                .findByDesignation(dto.getDesignation())
                 .ifPresent(user -> {
                     throw new BadRequestException("Product designation with designation: " + user.getDesignation() + " already exists");
                 });
@@ -56,12 +57,14 @@ public class ProductDesignationService {
     public ProductDesignationDto updateProductDesignation(String id, CreateProductDesignationDto dto) {
         log.info("Updating product designation with id: {} ", id);
 
-        productDesignationRepository.findByDesignation(dto.getDesignation())
+        productDesignationRepository
+                .findByDesignation(dto.getDesignation())
                 .ifPresent(user -> {
                     throw new BadRequestException("Product designation with designation: " + user.getDesignation() + " already exists");
                 });
 
-        ProductDesignation productDesignation = productDesignationRepository.findById(id)
+        ProductDesignation productDesignation = productDesignationRepository
+                .findById(id)
                 .orElseThrow(() -> new NotFoundException("Product designation with id: " + id + " was not found"));
 
         productDesignation.setDesignation(dto.getDesignation());

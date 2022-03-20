@@ -26,6 +26,10 @@ public class JwtTokenHelper {
     @Value("${jwt.secret}")
     private String secret;
 
+    private static final int accessTokenExpireTime = 3 * 60 * 60 * 1000; //3 hours
+
+    private static final int refreshTokenExpireTime = 48 * 60 * 60 * 1000; //48 hours
+
     private Algorithm createAlgorithm() {
         return Algorithm.HMAC256(secret.getBytes());
     }
@@ -33,7 +37,7 @@ public class JwtTokenHelper {
     public String createAccessToken(org.springframework.security.core.userdetails.User user, HttpServletRequest request, List<String> claim) {
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) //10 minutes
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpireTime))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", claim)
                 .sign(createAlgorithm());
@@ -42,7 +46,7 @@ public class JwtTokenHelper {
     public String createAccessToken(User user, HttpServletRequest request, List<String> claim) {
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) //10 minutes
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpireTime))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", claim)
                 .sign(createAlgorithm());
@@ -51,7 +55,7 @@ public class JwtTokenHelper {
     public String createRefreshToken(org.springframework.security.core.userdetails.User user, HttpServletRequest request) {
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) //30 minutes
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenExpireTime))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(createAlgorithm());
     }

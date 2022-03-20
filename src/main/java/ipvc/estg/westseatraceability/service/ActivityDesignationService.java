@@ -42,7 +42,8 @@ public class ActivityDesignationService {
     public ActivityDesignationDto createActivityDesignation(CreateActivityDesignationDto dto) {
         log.info("Creating new activity designation: {} ", dto.getDesignation());
 
-        activityDesignationRepository.findByDesignation(dto.getDesignation())
+        activityDesignationRepository
+                .findByDesignation(dto.getDesignation())
                 .ifPresent(user -> {
                     throw new BadRequestException("Activity designation with designation: " + user.getDesignation() + " already exists");
                 });
@@ -56,12 +57,14 @@ public class ActivityDesignationService {
     public ActivityDesignationDto updateActivityDesignation(String id, CreateActivityDesignationDto dto) {
         log.info("Updating activity designation with id: {} ", id);
 
-        activityDesignationRepository.findByDesignation(dto.getDesignation())
+        activityDesignationRepository
+                .findByDesignation(dto.getDesignation())
                 .ifPresent(user -> {
                     throw new BadRequestException("Activity designation with designation: " + user.getDesignation() + " already exists");
                 });
 
-        ActivityDesignation activityDesignation = activityDesignationRepository.findById(id)
+        ActivityDesignation activityDesignation = activityDesignationRepository
+                .findById(id)
                 .orElseThrow(() -> new NotFoundException("Activity designation with id: " + id + " was not found"));
 
         activityDesignation.setDesignation(dto.getDesignation());
