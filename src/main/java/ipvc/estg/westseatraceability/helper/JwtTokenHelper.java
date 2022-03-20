@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ipvc.estg.westseatraceability.model.User;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,16 +21,18 @@ import static java.util.Arrays.stream;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Component
-
 public class JwtTokenHelper {
 
+    @Value("${jwt.secret}")
+    private String secret;
+
     private Algorithm createAlgorithm() {
-        return Algorithm.HMAC256("secret".getBytes()); //FIXME: encripted string that is decripted in here
+        return Algorithm.HMAC256(secret.getBytes());
     }
 
     public String createAccessToken(org.springframework.security.core.userdetails.User user, HttpServletRequest request, List<String> claim) {
         return JWT.create()
-                .withSubject(user.getUsername()) //TODO: use UUID
+                .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) //10 minutes
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", claim)
@@ -38,7 +41,7 @@ public class JwtTokenHelper {
 
     public String createAccessToken(User user, HttpServletRequest request, List<String> claim) {
         return JWT.create()
-                .withSubject(user.getUsername()) //TODO: use UUID
+                .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) //10 minutes
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", claim)
@@ -47,7 +50,7 @@ public class JwtTokenHelper {
 
     public String createRefreshToken(org.springframework.security.core.userdetails.User user, HttpServletRequest request) {
         return JWT.create()
-                .withSubject(user.getUsername()) //TODO: use UUID
+                .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) //30 minutes
                 .withIssuer(request.getRequestURL().toString())
                 .sign(createAlgorithm());
