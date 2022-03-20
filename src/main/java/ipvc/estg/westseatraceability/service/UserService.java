@@ -2,6 +2,7 @@ package ipvc.estg.westseatraceability.service;
 
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
+import ipvc.estg.westseatraceability.exception.NotFoundException;
 import ipvc.estg.westseatraceability.mapper.UserMapper;
 import ipvc.estg.westseatraceability.enumeration.RoleEnum;
 import ipvc.estg.westseatraceability.model.User;
@@ -53,7 +54,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void addRoleToUser(String id, RoleEnum role) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         log.info("Adding role {} to the User {}", role, user.getName());
 
         user.getRoles().add(role);
@@ -62,12 +63,12 @@ public class UserService implements UserDetailsService {
 
     public User getUserById(String id) {
         log.info("Fetching user with the uuid: {}", id);
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public User getUserByUsername(String username) {
         log.info("Fetching user with the username: {}", username);
-        return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User with username: " + username + ", was not found"));
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User with username: " + username + ", was not found"));
     }
 
     public List<UserDto> getUsers() {
