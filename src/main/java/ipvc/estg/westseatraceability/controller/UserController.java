@@ -23,7 +23,7 @@ public class UserController implements UserControllerContract {
 
     @Override
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
