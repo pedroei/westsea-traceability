@@ -11,8 +11,7 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@FeignClient(value = "smartContractTraceabilityApi", url = "http://localhost:8801/invoke/my-channel1/trace-westsea")
-//FIXME: url, channel and chaincode on properties
+@FeignClient(value = "smartContractTraceabilityApi", url = "${app.blockchain.api.invoke-url}")
 public interface SmartContractTraceabilityApiClient {
 
     @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
