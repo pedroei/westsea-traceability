@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@FeignClient(value = "smartContractEnrollApi", url = "http://localhost:8801") //FIXME: url on properties
+@FeignClient(value = "smartContractEnrollApi", url = "${app.blockchain.api.base-url}")
 public interface SmartContractEnrollApiClient {
 
     @PostMapping(value = "/user/enroll", consumes = APPLICATION_JSON_VALUE)

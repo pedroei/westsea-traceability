@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,7 @@ public class BlockchainController implements BlockchainControllerContract {
 
     @Override
     @PostMapping("/activity")
-    public ResponseEntity<String> createActivity(@RequestBody CreateActivityDto activityDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(smartContractService.createActivity(activityDto));
+    public ResponseEntity<String> createActivity(Principal principal, @RequestBody CreateActivityDto activityDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(smartContractService.createActivity(principal.getName(), activityDto));
     }
 }

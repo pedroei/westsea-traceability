@@ -7,6 +7,7 @@ import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Principal;
 import java.util.List;
 
 @SecurityRequirement(name = "westseatraceapi")
@@ -21,5 +22,5 @@ public interface BlockchainControllerContract {
 
     ResponseEntity<String> createProductLot(CreateProductLotDto productLotDto);
 
-    ResponseEntity<String> createActivity(CreateActivityDto activityDto);
+    ResponseEntity<String> createActivity(Principal principal, CreateActivityDto activityDto);
 }

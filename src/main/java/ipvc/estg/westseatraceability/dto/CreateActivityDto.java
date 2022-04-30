@@ -12,9 +12,7 @@ import java.util.Map;
 public class CreateActivityDto {
     //FIXME: Swagger
 
-    Map<String, Float> inputProductLots;
-    private String activityID;
     private String designation;
-    private String userId;
+    Map<String, Float> inputProductLots;
     private CreateProductLotDto outputProductLot;
 }

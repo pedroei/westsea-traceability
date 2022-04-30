@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static ipvc.estg.westseatraceability.utils.Constants.*;
 
@@ -28,6 +29,7 @@ public class SmartContractService {
     private final SmartContractEnrollApiClient enrollApiClient;
     private final SmartContractTraceabilityApiClient traceabilityApiClient;
     private final BlockchainUserProperties blockchainUser;
+    private final UserService userService;
 
     @SneakyThrows
     private String buildJsonRequest(Map<String, ?> jsonProperties) {
@@ -104,7 +106,7 @@ public class SmartContractService {
         Map<String, ?> jsonProperties = Map.of(
                 METHOD, ContractMethod.CREATE_PRODUCT_LOT.value,
                 ARGS, List.of(
-                        productLotDto.getProductLotID(),
+                        UUID.randomUUID().toString(),
                         productLotDto.getReferenceNumber(),
                         productLotDto.getIsSerialNumber().toString(),
                         productLotDto.getDesignation(),
@@ -124,7 +126,7 @@ public class SmartContractService {
     private String createParsedActivityOutput(CreateProductLotDto outputProductLot) {
         var newProductLot = ProductLot.builder()
                 .docType("productLot") // does not matter
-                .id(outputProductLot.getProductLotID())
+                .id(UUID.randomUUID().toString())
                 .referenceNumber(outputProductLot.getReferenceNumber())
                 .isSerialNumber(outputProductLot.getIsSerialNumber())
                 .designation(outputProductLot.getDesignation())
@@ -137,15 +139,16 @@ public class SmartContractService {
         return parseToString(newProductLot);
     }
 
-    public String createActivity(CreateActivityDto activityDto) {
+    public String createActivity(String username, CreateActivityDto activityDto) {
+        var loggedInUser = userService.getUserByUsername(username);
         var bearerToken = getBearerToken();
 
         Map<String, ?> jsonProperties = Map.of(
                 METHOD, ContractMethod.CREATE_ACTIVITY.value,
                 ARGS, List.of(
-                        activityDto.getActivityID(),
+                        UUID.randomUUID().toString(),
                         activityDto.getDesignation(),
-                        activityDto.getUserId(), //FIXME: can come from the token
+                        loggedInUser.getId(),
                         parseToString(activityDto.getInputProductLots()),
                         createParsedActivityOutput(activityDto.getOutputProductLot())
                 )

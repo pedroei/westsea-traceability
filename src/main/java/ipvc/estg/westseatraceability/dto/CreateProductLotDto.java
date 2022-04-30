@@ -12,7 +12,6 @@ import java.util.List;
 public class CreateProductLotDto {
     //FIXME: Swagger
 
-    private String productLotID;
     private String referenceNumber;
     private Boolean isSerialNumber;
     private String designation;
