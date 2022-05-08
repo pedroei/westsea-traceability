@@ -7,6 +7,7 @@ import ipvc.estg.westseatraceability.clients.enums.ContractMethod;
 import ipvc.estg.westseatraceability.clients.model.Activity;
 import ipvc.estg.westseatraceability.clients.model.BlockchainUserProperties;
 import ipvc.estg.westseatraceability.clients.model.ProductLot;
+import ipvc.estg.westseatraceability.clients.model.ProductTraceability;
 import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class SmartContractService {
     private final SmartContractTraceabilityApiClient traceabilityApiClient;
     private final BlockchainUserProperties blockchainUser;
     private final UserService userService;
+
+    //FIXME: when there is no activities/productLots the result of the fablo api IS NOT an empty array, it is a string. This causes a conversion error
 
     @SneakyThrows
     private String buildJsonRequest(Map<String, ?> jsonProperties) {
@@ -80,7 +83,7 @@ public class SmartContractService {
         return response.get(RESPONSE);
     }
 
-    public List<Activity> getTraceability(String referenceNumber) {
+    public ProductTraceability getTraceability(String referenceNumber) {
         var bearerToken = getBearerToken();
 
         Map<String, ?> jsonProperties = Map.of(
@@ -90,7 +93,7 @@ public class SmartContractService {
 
         String jsonRequest = buildJsonRequest(jsonProperties);
 
-        Map<String, List<Activity>> response = traceabilityApiClient.getTraceability(bearerToken, jsonRequest);
+        Map<String, ProductTraceability> response = traceabilityApiClient.getTraceability(bearerToken, jsonRequest);
 
         return response.get(RESPONSE);
     }

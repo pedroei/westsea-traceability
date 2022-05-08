@@ -5,7 +5,7 @@ public enum ContractMethod {
     CREATE_ACTIVITY("WestseaTraceShipContract:CreateActivity"),
     READ_ALL_PRODUCT_LOTS("WestseaTraceShipContract:GetAllProductLot"),
     READ_ALL_ACTIVITIES("WestseaTraceShipContract:GetAllActivities"),
-    GET_TRACEABILITY("WestseaTraceShipContract:GetTraceability");
+    GET_TRACEABILITY("WestseaTraceShipContract:GetTraceabilityByReferenceNum");
 
     public final String value;
 

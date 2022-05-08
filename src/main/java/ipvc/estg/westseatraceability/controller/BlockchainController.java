@@ -2,6 +2,7 @@ package ipvc.estg.westseatraceability.controller;
 
 import ipvc.estg.westseatraceability.clients.model.Activity;
 import ipvc.estg.westseatraceability.clients.model.ProductLot;
+import ipvc.estg.westseatraceability.clients.model.ProductTraceability;
 import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
 import ipvc.estg.westseatraceability.service.SmartContractService;
@@ -36,7 +37,7 @@ public class BlockchainController implements BlockchainControllerContract {
 
     @Override
     @GetMapping("{referenceNumber}")
-    public ResponseEntity<List<Activity>> getTraceability(@PathVariable String referenceNumber) {
+    public ResponseEntity<ProductTraceability> getTraceability(@PathVariable String referenceNumber) {
         return ResponseEntity.ok().body(smartContractService.getTraceability(referenceNumber));
     }
 

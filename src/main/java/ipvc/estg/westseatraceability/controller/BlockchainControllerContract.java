@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import ipvc.estg.westseatraceability.clients.model.Activity;
 import ipvc.estg.westseatraceability.clients.model.ProductLot;
+import ipvc.estg.westseatraceability.clients.model.ProductTraceability;
 import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
 import org.springframework.http.ResponseEntity;
@@ -36,16 +37,16 @@ public interface BlockchainControllerContract {
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
     ResponseEntity<List<Activity>> getActivities();
 
-    @Operation(summary = "Get all activities related to a certain ProductLot")
+    @Operation(summary = "Get the traceability of ProductLot based on his reference number")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Activities retrieved successfully", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = Activity.class))}),
+            @ApiResponse(responseCode = "200", description = "Traceability retrieved successfully", content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ProductTraceability.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
             @ApiResponse(responseCode = "404", description = "Product lot with that referenceNumber not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
-    ResponseEntity<List<Activity>> getTraceability(String referenceNumber);
+    ResponseEntity<ProductTraceability> getTraceability(String referenceNumber);
 
     @Operation(summary = "Create a product lot")
     @ApiResponses(value = {
