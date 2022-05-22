@@ -1,5 +1,6 @@
 package ipvc.estg.westseatraceability.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,7 +27,7 @@ public interface BlockchainControllerContract {
             @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
-    ResponseEntity<List<ProductLot>> getProductLots();
+    ResponseEntity<List<ProductLot>> getProductLots() throws JsonProcessingException;
 
     @Operation(summary = "Get all activities")
     @ApiResponses(value = {
@@ -35,7 +36,7 @@ public interface BlockchainControllerContract {
             @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
-    ResponseEntity<List<Activity>> getActivities();
+    ResponseEntity<List<Activity>> getActivities() throws JsonProcessingException;
 
     @Operation(summary = "Get the traceability of ProductLot based on his reference number")
     @ApiResponses(value = {
@@ -46,7 +47,7 @@ public interface BlockchainControllerContract {
             @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
             @ApiResponse(responseCode = "404", description = "Product lot with that referenceNumber not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
-    ResponseEntity<ProductTraceability> getTraceability(String referenceNumber);
+    ResponseEntity<ProductTraceability> getTraceability(String referenceNumber) throws JsonProcessingException;
 
     @Operation(summary = "Create a product lot")
     @ApiResponses(value = {
