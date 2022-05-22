@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-class ErrorBody {
+public class ErrorBody {
     private Instant timestamp;
     private int status;
     private String error;
