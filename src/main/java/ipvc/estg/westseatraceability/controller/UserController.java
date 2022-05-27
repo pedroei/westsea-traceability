@@ -1,7 +1,7 @@
 package ipvc.estg.westseatraceability.controller;
 
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
-import ipvc.estg.westseatraceability.dto.RoleToUserDto;
+import ipvc.estg.westseatraceability.dto.UpdateUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
 import ipvc.estg.westseatraceability.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,8 @@ public class UserController implements UserControllerContract {
     }
 
     @Override
-    @PostMapping("/role")
-    public ResponseEntity<Void> addRoleToUser(@RequestBody RoleToUserDto dto) {
-        userService.addRoleToUser(dto.getUserId(), dto.getRole());
-        return ResponseEntity.ok().build();
+    @PutMapping("{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable String id, @RequestBody UpdateUserDto dto) {
+        return ResponseEntity.ok().body(userService.update(id, dto));
     }
 }

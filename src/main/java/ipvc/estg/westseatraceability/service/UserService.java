@@ -1,8 +1,8 @@
 package ipvc.estg.westseatraceability.service;
 
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
+import ipvc.estg.westseatraceability.dto.UpdateUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
-import ipvc.estg.westseatraceability.enumeration.RoleEnum;
 import ipvc.estg.westseatraceability.exception.BadRequestException;
 import ipvc.estg.westseatraceability.exception.NotFoundException;
 import ipvc.estg.westseatraceability.mapper.UserMapper;
@@ -59,16 +59,12 @@ public class UserService implements UserDetailsService {
         return userMapper.userToDto(newUser);
     }
 
-    public void addRoleToUser(String id, RoleEnum role) {
+    public UserDto update(String id, UpdateUserDto dto) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        log.info("Adding role {} to the User {}", role, user.getName());
+        log.info("Updating User with the id: {}", user.getId());
 
-        if (user.getRoles().contains(role)) {
-            throw new BadRequestException("User " + user.getUsername() + " already as the role of: " + role);
-        }
-
-        user.getRoles().add(role);
-        userRepository.save(user);
+        var updatedUser = userMapper.updateDtoToUser(user, dto);
+        return userMapper.userToDto(userRepository.save(updatedUser));
     }
 
     public User getUserByUsername(String username) {

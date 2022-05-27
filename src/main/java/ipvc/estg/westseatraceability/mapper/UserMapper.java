@@ -1,12 +1,12 @@
 package ipvc.estg.westseatraceability.mapper;
 
 import ipvc.estg.westseatraceability.dto.CreateUserDto;
+import ipvc.estg.westseatraceability.dto.UpdateUserDto;
 import ipvc.estg.westseatraceability.dto.UserDto;
 import ipvc.estg.westseatraceability.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserMapper {
@@ -30,6 +30,13 @@ public class UserMapper {
     }
 
     public List<UserDto> userListToDto(List<User> users) {
-        return users.stream().map(this::userToDto).collect(Collectors.toList());
+        return users.stream().map(this::userToDto).toList();
+    }
+
+    public User updateDtoToUser(User user, UpdateUserDto dto) {
+        user.setName(dto.getName() != null && !dto.getName().equals("") ? dto.getName() : user.getName());
+        user.setRoles(dto.getRoles() != null && !dto.getRoles().isEmpty() ? dto.getRoles() : user.getRoles());
+
+        return user;
     }
 }
