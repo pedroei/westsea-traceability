@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,6 +28,6 @@ public class CreateProductLotDto {
     @Schema(description = "the initial amount of a productLot, if isSerialNumber==true, this will always be true", example = "500")
     private Float initialAmount;
 
-    @Schema(description = "list of keys that represent different documents", example = "[\"key1\", \"key2\", \"key33\"]")
-    private List<String> documentKeys;
+    @Schema(description = "list of documents")
+    private List<MultipartFile> documents;
 }

@@ -29,4 +29,7 @@ public interface SmartContractTraceabilityApiClient {
 
     @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
     Map<String, ProductTraceability> getTraceability(@RequestHeader("Authorization") String bearerToken, String jsonRequest);
+
+    @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
+    Map<String, String> updateProductLotDocumentKeys(@RequestHeader("Authorization") String bearerToken, String jsonRequest);
 }

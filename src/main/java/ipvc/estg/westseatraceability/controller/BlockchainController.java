@@ -5,13 +5,16 @@ import ipvc.estg.westseatraceability.clients.model.ProductLot;
 import ipvc.estg.westseatraceability.clients.model.ProductTraceability;
 import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
+import ipvc.estg.westseatraceability.service.FileService;
 import ipvc.estg.westseatraceability.service.SmartContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 
@@ -22,6 +25,7 @@ import java.util.List;
 public class BlockchainController implements BlockchainControllerContract {
 
     private final SmartContractService smartContractService;
+    private final FileService fileService;
 
     @Override
     @GetMapping("/product")
@@ -42,14 +46,20 @@ public class BlockchainController implements BlockchainControllerContract {
     }
 
     @Override
-    @PostMapping("/product")
-    public ResponseEntity<String> createProductLot(@RequestBody CreateProductLotDto productLotDto) {
+    @PostMapping(value = "/product", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> createProductLot(@ModelAttribute CreateProductLotDto productLotDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(smartContractService.createProductLot(productLotDto));
     }
 
     @Override
-    @PostMapping("/activity")
-    public ResponseEntity<String> createActivity(Principal principal, @RequestBody CreateActivityDto activityDto) {
+    @PostMapping(value = "/activity", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> createActivity(Principal principal, @ModelAttribute CreateActivityDto activityDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(smartContractService.createActivity(principal.getName(), activityDto));
+    }
+
+    @Override
+    @GetMapping("/product/{productLotUuid}/document/{documentKey}/download")
+    public void getDocument(@PathVariable String productLotUuid, @PathVariable String documentKey, HttpServletResponse response) {
+        fileService.getDocument(productLotUuid, documentKey, response);
     }
 }

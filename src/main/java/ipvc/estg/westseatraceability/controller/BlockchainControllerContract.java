@@ -13,6 +13,7 @@ import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 
@@ -68,4 +69,12 @@ public interface BlockchainControllerContract {
             @ApiResponse(responseCode = "404", description = "Input product lot not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
     ResponseEntity<String> createActivity(Principal principal, CreateActivityDto activityDto);
+
+    @Operation(summary = "Download a document")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Document retrieved"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
+    void getDocument(String productLotUuid, String documentKey, HttpServletResponse response);
 }

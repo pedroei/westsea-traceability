@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +32,7 @@ public class SmartContractService {
     private final SmartContractTraceabilityApiClient traceabilityApiClient;
     private final BlockchainUserProperties blockchainUser;
     private final UserService userService;
+    private final FileService fileService;
 
     //FIXME: when there is no activities/productLots the result of the fablo api IS NOT an empty array, it is a string. This causes a conversion error
 
@@ -106,16 +108,19 @@ public class SmartContractService {
     public String createProductLot(CreateProductLotDto productLotDto) {
         var bearerToken = getBearerToken();
 
+        var productLotUuid = UUID.randomUUID().toString();
+        List<String> documentKeys = Collections.emptyList();
+
         Map<String, ?> jsonProperties = Map.of(
                 METHOD, ContractMethod.CREATE_PRODUCT_LOT.value,
                 ARGS, List.of(
-                        UUID.randomUUID().toString(),
+                        productLotUuid,
                         productLotDto.getReferenceNumber(),
                         productLotDto.getIsSerialNumber().toString(),
                         productLotDto.getDesignation(),
                         productLotDto.getProductType(),
                         productLotDto.getInitialAmount().toString(),
-                        parseToString(productLotDto.getDocumentKeys())
+                        parseToString(documentKeys)
                 )
         );
 
@@ -123,20 +128,27 @@ public class SmartContractService {
 
         Map<String, String> response = traceabilityApiClient.createProductLot(bearerToken, jsonRequest);
 
+        if (!productLotDto.getDocuments().isEmpty()) {
+            documentKeys = fileService.uploadDocuments(productLotDto.getDocuments(), productLotUuid);
+            updateProductLotDocumentKeys(productLotUuid, documentKeys);
+        }
+
         return response.get(RESPONSE);
     }
 
-    private String createParsedActivityOutput(CreateProductLotDto outputProductLot) {
+    private String createParsedActivityOutput(CreateActivityDto activityDto, String productLotUuid) {
+        List<String> documentKeys = Collections.emptyList();
+
         var newProductLot = ProductLot.builder()
                 .docType("productLot") // does not matter
-                .id(UUID.randomUUID().toString())
-                .referenceNumber(outputProductLot.getReferenceNumber())
-                .isSerialNumber(outputProductLot.getIsSerialNumber())
-                .designation(outputProductLot.getDesignation())
-                .productType(outputProductLot.getProductType())
-                .initialQuantity(outputProductLot.getInitialAmount())
-                .availableQuantity(outputProductLot.getInitialAmount()) // does not matter
-                .documentKeys(outputProductLot.getDocumentKeys())
+                .id(productLotUuid)
+                .referenceNumber(activityDto.getOutputReferenceNumber())
+                .isSerialNumber(activityDto.getOutputIsSerialNumber())
+                .designation(activityDto.getOutputDesignation())
+                .productType(activityDto.getOutputProductType())
+                .initialQuantity(activityDto.getOutputInitialAmount())
+                .availableQuantity(activityDto.getOutputInitialAmount()) // does not matter
+                .documentKeys(documentKeys)
                 .build();
 
         return parseToString(newProductLot);
@@ -146,6 +158,8 @@ public class SmartContractService {
         var loggedInUser = userService.getUserByUsername(username);
         var bearerToken = getBearerToken();
 
+        var outputProductUuid = UUID.randomUUID().toString();
+
         Map<String, ?> jsonProperties = Map.of(
                 METHOD, ContractMethod.CREATE_ACTIVITY.value,
                 ARGS, List.of(
@@ -153,7 +167,7 @@ public class SmartContractService {
                         activityDto.getDesignation(),
                         loggedInUser.getId(),
                         parseToString(activityDto.getInputProductLots()),
-                        createParsedActivityOutput(activityDto.getOutputProductLot())
+                        createParsedActivityOutput(activityDto, outputProductUuid)
                 )
         );
 
@@ -161,6 +175,29 @@ public class SmartContractService {
 
         Map<String, String> response = traceabilityApiClient.createActivity(bearerToken, jsonRequest);
 
+        if (!activityDto.getOutputDocuments().isEmpty()) {
+            var documentKeys = fileService.uploadDocuments(activityDto.getOutputDocuments(), outputProductUuid);
+            updateProductLotDocumentKeys(outputProductUuid, documentKeys);
+        }
+
         return response.get(RESPONSE);
+    }
+
+    public void updateProductLotDocumentKeys(String productLotId, List<String> newDocumentKeys) {
+        var bearerToken = getBearerToken();
+
+        Map<String, ?> jsonProperties = Map.of(
+                METHOD, ContractMethod.UPDATE_PRODUCT_LOT_DOCUMENT_KEYS.value,
+                ARGS, List.of(
+                        productLotId,
+                        parseToString(newDocumentKeys)
+                )
+        );
+
+        String jsonRequest = buildJsonRequest(jsonProperties);
+
+        Map<String, String> response = traceabilityApiClient.updateProductLotDocumentKeys(bearerToken, jsonRequest);
+
+        log.info(response.get(RESPONSE));
     }
 }
