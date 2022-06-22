@@ -12,6 +12,9 @@ import java.util.Set;
 @Builder
 public class UserDto {
 
+    @Schema(description = "id of the new user", example = "12345abcde")
+    private String id;
+
     @Schema(description = "name of the new user", example = "Jose Almeida")
     private String name;
 

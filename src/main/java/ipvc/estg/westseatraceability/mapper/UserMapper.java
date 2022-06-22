@@ -23,6 +23,7 @@ public class UserMapper {
 
     public UserDto userToDto(User user) {
         return UserDto.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .username(user.getUsername())
                 .roles(user.getRoles())
