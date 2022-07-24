@@ -5,7 +5,6 @@ import ipvc.estg.westseatraceability.clients.model.ProductLot;
 import ipvc.estg.westseatraceability.clients.model.ProductTraceability;
 import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
-import ipvc.estg.westseatraceability.service.FileService;
 import ipvc.estg.westseatraceability.service.SmartContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ import java.util.List;
 public class BlockchainController implements BlockchainControllerContract {
 
     private final SmartContractService smartContractService;
-    private final FileService fileService;
 
     @Override
     @GetMapping("/product")
@@ -59,7 +57,10 @@ public class BlockchainController implements BlockchainControllerContract {
 
     @Override
     @GetMapping("/product/{productLotUuid}/document/{documentKey}/download")
-    public void getDocument(@PathVariable String productLotUuid, @PathVariable String documentKey, HttpServletResponse response) {
-        fileService.getDocument(productLotUuid, documentKey, response);
+    public ResponseEntity<byte[]> getDocument(@PathVariable String productLotUuid, @PathVariable String documentKey, HttpServletResponse response) {
+        var inputStream = smartContractService.getDocument(productLotUuid, documentKey, response);
+
+        return ResponseEntity.ok()
+                .body(inputStream.toByteArray());
     }
 }

@@ -25,6 +25,9 @@ public interface SmartContractTraceabilityApiClient {
     Map<String, List<ProductLot>> getAllProductLots(@RequestHeader("Authorization") String bearerToken, String jsonRequest);
 
     @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
+    Map<String, ProductLot> getProductLot(@RequestHeader("Authorization") String bearerToken, String jsonRequest);
+
+    @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
     Map<String, List<Activity>> getAllActivities(@RequestHeader("Authorization") String bearerToken, String jsonRequest);
 
     @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)

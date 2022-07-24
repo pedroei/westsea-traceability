@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ipvc.estg.westseatraceability.clients.SmartContractEnrollApiClient;
 import ipvc.estg.westseatraceability.clients.SmartContractTraceabilityApiClient;
 import ipvc.estg.westseatraceability.clients.enums.ContractMethod;
-import ipvc.estg.westseatraceability.clients.model.Activity;
-import ipvc.estg.westseatraceability.clients.model.BlockchainUserProperties;
-import ipvc.estg.westseatraceability.clients.model.ProductLot;
-import ipvc.estg.westseatraceability.clients.model.ProductTraceability;
+import ipvc.estg.westseatraceability.clients.model.*;
 import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +69,21 @@ public class SmartContractService {
         return response.get(RESPONSE);
     }
 
+    public ProductLot findProductLot(String productLotId) {
+        var bearerToken = getBearerToken();
+
+        Map<String, ?> jsonProperties = Map.of(
+                METHOD, ContractMethod.READ_PRODUCT_LOT.value,
+                ARGS, List.of(productLotId)
+        );
+
+        String jsonRequest = buildJsonRequest(jsonProperties);
+
+        Map<String, ProductLot> response = traceabilityApiClient.getProductLot(bearerToken, jsonRequest);
+
+        return response.get(RESPONSE);
+    }
+
     public List<Activity> getAllActivities() {
         var bearerToken = getBearerToken();
 
@@ -109,7 +123,7 @@ public class SmartContractService {
         var bearerToken = getBearerToken();
 
         var productLotUuid = UUID.randomUUID().toString();
-        List<String> documentKeys = Collections.emptyList();
+        List<DocumentKey> documentKeys = Collections.emptyList();
 
         Map<String, ?> jsonProperties = Map.of(
                 METHOD, ContractMethod.CREATE_PRODUCT_LOT.value,
@@ -137,7 +151,7 @@ public class SmartContractService {
     }
 
     private String createParsedActivityOutput(CreateActivityDto activityDto, String productLotUuid) {
-        List<String> documentKeys = Collections.emptyList();
+        List<DocumentKey> documentKeys = Collections.emptyList();
 
         var newProductLot = ProductLot.builder()
                 .docType("productLot") // does not matter
@@ -183,7 +197,7 @@ public class SmartContractService {
         return response.get(RESPONSE);
     }
 
-    public void updateProductLotDocumentKeys(String productLotId, List<String> newDocumentKeys) {
+    public void updateProductLotDocumentKeys(String productLotId, List<DocumentKey> newDocumentKeys) {
         var bearerToken = getBearerToken();
 
         Map<String, ?> jsonProperties = Map.of(
@@ -199,5 +213,14 @@ public class SmartContractService {
         Map<String, String> response = traceabilityApiClient.updateProductLotDocumentKeys(bearerToken, jsonRequest);
 
         log.info(response.get(RESPONSE));
+    }
+
+    public ByteArrayOutputStream getDocument(String productLotUuid, String documentKey, HttpServletResponse response) {
+        return findProductLot(productLotUuid)
+                .getDocumentKeys()
+                .stream()
+                .filter(docKey -> docKey.getDocumentKey().equals(documentKey))
+                .findFirst()
+                .map(value -> fileService.getDocument(productLotUuid, documentKey, response, value.getFileFingerPrint())).orElse(null);
     }
 }

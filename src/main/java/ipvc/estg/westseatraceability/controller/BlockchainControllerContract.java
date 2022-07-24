@@ -76,5 +76,5 @@ public interface BlockchainControllerContract {
             @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
-    void getDocument(String productLotUuid, String documentKey, HttpServletResponse response);
+    ResponseEntity<byte[]> getDocument(String productLotUuid, String documentKey, HttpServletResponse response);
 }

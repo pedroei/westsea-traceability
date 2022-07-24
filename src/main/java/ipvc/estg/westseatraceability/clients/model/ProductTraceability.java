@@ -39,7 +39,7 @@ public class ProductTraceability {
     private Float usedQuantityAsInput;
 
     @Schema(description = "list of keys that represent different documents", example = "[\"key1\", \"key2\", \"key33\"]")
-    private List<String> documentKeys;
+    private List<DocumentKey> documentKeys;
 
     @Schema(description = "activity where this productLot was the output")
     private ActivityTraceability activity;

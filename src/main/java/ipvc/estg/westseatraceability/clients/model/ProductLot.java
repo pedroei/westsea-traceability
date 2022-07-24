@@ -39,5 +39,5 @@ public class ProductLot {
     private Float availableQuantity;
 
     @Schema(description = "list of keys that represent different documents", example = "[\"key1\", \"key2\", \"key33\"]")
-    private List<String> documentKeys;
+    private List<DocumentKey> documentKeys;
 }
