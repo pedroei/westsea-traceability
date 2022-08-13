@@ -142,7 +142,7 @@ public class SmartContractService {
 
         Map<String, String> response = traceabilityApiClient.createProductLot(bearerToken, jsonRequest);
 
-        if (!productLotDto.getDocuments().isEmpty()) {
+        if (productLotDto.getDocuments() != null && !productLotDto.getDocuments().isEmpty()) {
             documentKeys = fileService.uploadDocuments(productLotDto.getDocuments(), productLotUuid);
             updateProductLotDocumentKeys(productLotUuid, documentKeys);
         }
@@ -189,7 +189,7 @@ public class SmartContractService {
 
         Map<String, String> response = traceabilityApiClient.createActivity(bearerToken, jsonRequest);
 
-        if (!activityDto.getOutputDocuments().isEmpty()) {
+        if (activityDto.getOutputDocuments() != null && !activityDto.getOutputDocuments().isEmpty()) {
             var documentKeys = fileService.uploadDocuments(activityDto.getOutputDocuments(), outputProductUuid);
             updateProductLotDocumentKeys(outputProductUuid, documentKeys);
         }
