@@ -12,8 +12,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -215,12 +213,12 @@ public class SmartContractService {
         log.info(response.get(RESPONSE));
     }
 
-    public ByteArrayOutputStream getDocument(String productLotUuid, String documentKey, HttpServletResponse response) {
+    public byte[] getDocument(String productLotUuid, String documentKey) {
         return findProductLot(productLotUuid)
                 .getDocumentKeys()
                 .stream()
                 .filter(docKey -> docKey.getDocumentKey().equals(documentKey))
                 .findFirst()
-                .map(value -> fileService.getDocument(productLotUuid, documentKey, response, value.getFileFingerPrint())).orElse(null);
+                .map(value -> fileService.getDocument(productLotUuid, documentKey, value.getFileFingerPrint())).orElse(null);
     }
 }

@@ -11,9 +11,9 @@ import ipvc.estg.westseatraceability.clients.model.ProductLot;
 import ipvc.estg.westseatraceability.clients.model.ProductTraceability;
 import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 
@@ -76,5 +76,5 @@ public interface BlockchainControllerContract {
             @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server error, based upon the context", content = @Content)})
-    ResponseEntity<byte[]> getDocument(String productLotUuid, String documentKey, HttpServletResponse response);
+    ResponseEntity<ByteArrayResource> getDocument(String productLotUuid, String documentKey);
 }

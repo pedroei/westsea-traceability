@@ -9,8 +9,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -60,9 +58,8 @@ public class FileService {
                 .build();
     }
 
-    public ByteArrayOutputStream getDocument(String productLotUuid, String documentKey,
-                                             HttpServletResponse response, String documentFingerPrint) {
+    public byte[] getDocument(String productLotUuid, String documentKey, String documentFingerPrint) {
         var path = String.format("%s/%s", awsS3Properties.getBucketName(), productLotUuid);
-        return fileStore.download(path, documentKey, response, documentFingerPrint);
+        return fileStore.download(path, documentKey, documentFingerPrint);
     }
 }

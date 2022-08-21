@@ -7,13 +7,13 @@ import ipvc.estg.westseatraceability.dto.CreateActivityDto;
 import ipvc.estg.westseatraceability.dto.CreateProductLotDto;
 import ipvc.estg.westseatraceability.service.SmartContractService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 
@@ -57,10 +57,15 @@ public class BlockchainController implements BlockchainControllerContract {
 
     @Override
     @GetMapping("/product/{productLotUuid}/document/{documentKey}/download")
-    public ResponseEntity<byte[]> getDocument(@PathVariable String productLotUuid, @PathVariable String documentKey, HttpServletResponse response) {
-        var inputStream = smartContractService.getDocument(productLotUuid, documentKey, response);
+    public ResponseEntity<ByteArrayResource> getDocument(@PathVariable String productLotUuid, @PathVariable String documentKey) {
+        var data = smartContractService.getDocument(productLotUuid, documentKey);
+        var filename = "file.pdf"; //only pdf for now
 
-        return ResponseEntity.ok()
-                .body(inputStream.toByteArray());
+        return ResponseEntity
+                .ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment; filename=\"" + filename + "\"")
+                .body(new ByteArrayResource(data));
     }
 }
