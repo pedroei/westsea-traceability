@@ -27,18 +27,21 @@ public class BlockchainController implements BlockchainControllerContract {
 
     @Override
     @GetMapping("/product")
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<List<ProductLot>> getProductLots() {
         return ResponseEntity.ok().body(smartContractService.getAllProductLots());
     }
 
     @Override
     @GetMapping("/activity")
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<List<Activity>> getActivities() {
         return ResponseEntity.ok().body(smartContractService.getAllActivities());
     }
 
     @Override
     @GetMapping("{referenceNumber}")
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<ProductTraceability> getTraceability(@PathVariable String referenceNumber) {
         return ResponseEntity.ok().body(smartContractService.getTraceability(referenceNumber));
     }
@@ -57,6 +60,7 @@ public class BlockchainController implements BlockchainControllerContract {
 
     @Override
     @GetMapping("/product/{productLotUuid}/document/{documentKey}/download")
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<ByteArrayResource> getDocument(@PathVariable String productLotUuid, @PathVariable String documentKey) {
         var data = smartContractService.getDocument(productLotUuid, documentKey);
         var filename = "file.pdf"; //only pdf for now
