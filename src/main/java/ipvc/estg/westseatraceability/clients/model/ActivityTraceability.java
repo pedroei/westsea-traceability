@@ -2,11 +2,13 @@ package ipvc.estg.westseatraceability.clients.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
+@Builder
 public class ActivityTraceability {
 
     @Schema(description = "id of this activity", example = "123")
